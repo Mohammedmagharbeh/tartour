@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <link rel="stylesheet" href="./css/lala.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام جرد المحل</title>
+  <style>
+    /* نفس التنسيقات السابقة */
+  </style>
+</head>
+
+<body>
+
+  <h3> مؤسسة الناطور لمواد البناء</h3>
+  <h1>نظام الجرد</h1>
+<a href="./lolo.html">
+    <button id="button">ع الديون معلم ➡️</button>
+</a>
+  <!-- الفورم لإضافة المواد -->
+  <form id="formadd">
+    <input type="text" id="Name" placeholder="اسم المادة" required />
+    <input type="number" id="Quantity" placeholder="العدد" required />
+    <input type="number" id="Price" placeholder="السعر" required />
+    <button type="submit" id="addButton">إضافة المادة</button>
+  </form>
+
+  <!-- الجدول لعرض المواد -->
+  <table>
+    <thead>
+      <tr>
+        <th>اسم المادة</th>
+        <th>العدد</th>
+        <th>السعر (للوحدة)</th>
+        <th>السعر الإجمالي</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody id="itemsTableBody">
+      <!-- الصفوف ستضاف ديناميكيًا هنا -->
+    </tbody>
+  </table>
+
+  <!-- المجموع الكلي -->
+  <h2>المجموع الكلي: <span id="totalPrice">0</span> دينار</h2>
+
+  <!-- نافذة التعديل -->
+  <div id="editModal" style="display: none;">
+    <h3>تعديل المادة</h3>
+    <input type="text" id="editName" placeholder="اسم المادة" required />
+    <input type="number" id="editQuantity" placeholder="العدد" required />
+    <input type="number" id="editPrice" placeholder="السعر" required />
+    <button id="saveEdit">حفظ التعديل</button>
+  </div>
+
+  <script>
+    const form = document.getElementById("formadd");
+    const tableBody = document.getElementById("itemsTableBody");
+    const totalPriceElement = document.getElementById("totalPrice");
+    const editModal = document.getElementById("editModal");
+    const editName = document.getElementById("editName");
+    const editQuantity = document.getElementById("editQuantity");
+    const editPrice = document.getElementById("editPrice");
+    const saveEditButton = document.getElementById("saveEdit");
+    let items = JSON.parse(localStorage.getItem("items")) || [];
+    let editIndex = null;
+
+    // تحديث عرض الجدول عند تحميل الصفحة
+    renderTable();
+    updateTotalPrice();
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("Name").value.trim();
+      const quantity = parseInt(document.getElementById("Quantity").value.trim());
+      const price = parseFloat(document.getElementById("Price").value.trim());
+
+      if (name && quantity > 0 && price > 0) {
+        const total = (quantity * price).toFixed(2);
+        items.push({ name, quantity, price, total });
+        saveToLocalStorage();
+        renderTable();
+        updateTotalPrice();
+        form.reset();
+      } else {
+        alert("الرجاء ملء جميع الحقول بشكل صحيح!");
+      }
+    });
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      items.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.quantity}</td>
+          <td>${item.price}</td>
+          <td>${item.total}</td>
+          <td>
+            <button onclick="editItem(${index})">تعديل</button>
+            <button onclick="removeItem(${index})">إزالة</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function updateTotalPrice() {
+      const total = items.reduce((sum, item) => sum + parseFloat(item.total), 0);
+      totalPriceElement.textContent = total.toFixed(2);
+    }
+
+    function removeItem(index) {
+      items.splice(index, 1);
+      saveToLocalStorage();
+      renderTable();
+      updateTotalPrice();
+    }
+
+    function editItem(index) {
+      editIndex = index;
+      const item = items[index];
+      editName.value = item.name;
+      editQuantity.value = item.quantity;
+      editPrice.value = item.price;
+      editModal.style.display = "block";
+    }
+
+    saveEditButton.addEventListener("click", () => {
+      const name = editName.value.trim();
+      const quantity = parseInt(editQuantity.value.trim());
+      const price = parseFloat(editPrice.value.trim());
+
+      if (name && quantity > 0 && price > 0) {
+        const total = (quantity * price).toFixed(2);
+        items[editIndex] = { name, quantity, price, total };
+        saveToLocalStorage();
+        renderTable();
+        updateTotalPrice();
+        editModal.style.display = "none";
+      } else {
+        alert("الرجاء ملء جميع الحقول بشكل صحيح!");
+      }
+    });
+
+    function saveToLocalStorage() {
+      localStorage.setItem("items", JSON.stringify(items));
+    }
+  </script>
+</body>
+</html>
