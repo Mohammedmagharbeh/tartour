@@ -15,14 +15,14 @@
 
   <h3> مؤسسة الناطور لمواد البناء</h3>
   <h1>نظام الجرد</h1>
-<a href="./lolo.html">
+  <a href="./lolo.html">
     <button id="button">ع الديون معلم ➡️</button>
-</a>
+  </a>
   <!-- الفورم لإضافة المواد -->
   <form id="formadd">
     <input type="text" id="Name" placeholder="اسم المادة" required />
     <input type="number" id="Quantity" placeholder="العدد" required />
-    <input type="number" id="Price" placeholder="السعر" required />
+    <input type="number" id="Price" placeholder="السعر" step="0.01" required />
     <button type="submit" id="addButton">إضافة المادة</button>
   </form>
 
@@ -50,7 +50,7 @@
     <h3>تعديل المادة</h3>
     <input type="text" id="editName" placeholder="اسم المادة" required />
     <input type="number" id="editQuantity" placeholder="العدد" required />
-    <input type="number" id="editPrice" placeholder="السعر" required />
+    <input type="number" id="editPrice" placeholder="السعر" step="0.01" required />
     <button id="saveEdit">حفظ التعديل</button>
   </div>
 
@@ -77,7 +77,8 @@
       const quantity = parseInt(document.getElementById("Quantity").value.trim());
       const price = parseFloat(document.getElementById("Price").value.trim());
 
-      if (name && quantity > 0 && price > 0) {
+      // التحقق من صحة المدخلات
+      if (name && quantity > 0 && !isNaN(price) && price > 0) {
         const total = (quantity * price).toFixed(2);
         items.push({ name, quantity, price, total });
         saveToLocalStorage();
@@ -133,7 +134,8 @@
       const quantity = parseInt(editQuantity.value.trim());
       const price = parseFloat(editPrice.value.trim());
 
-      if (name && quantity > 0 && price > 0) {
+      // التحقق من صحة المدخلات
+      if (name && quantity > 0 && !isNaN(price) && price > 0) {
         const total = (quantity * price).toFixed(2);
         items[editIndex] = { name, quantity, price, total };
         saveToLocalStorage();
