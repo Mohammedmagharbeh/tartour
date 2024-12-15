@@ -2,22 +2,21 @@
 <html lang="ar">
 <head>
     <link rel="stylesheet" href="./css/lala.css">
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام جرد المحل</title>
-  <style>
-    /* نفس التنسيقات السابقة */
-  </style>
+  <title>نظام جرد المستودع 2</title>
 </head>
 
 <body>
-
   <h3> مؤسسة الناطور لمواد البناء</h3>
-  <h1>نظام الجرد</h1>
-  <a href="./store.html">
-    <button id="button">ع المستودع 1➡️</button>
+  <h1>نظام الجرد - مستودع 2</h1>
+  <a href="./lolo.html">
+    <button id="button">ع الديون معلم ➡️</button>
   </a>
+  <a href="./store.html">
+    <button id="button">ع المستودع 1⬅️</button>
+  </a>
+  
   <!-- الفورم لإضافة المواد -->
   <form id="formadd">
     <input type="text" id="Name" placeholder="اسم المادة" required />
@@ -38,7 +37,6 @@
       </tr>
     </thead>
     <tbody id="itemsTableBody">
-      <!-- الصفوف ستضاف ديناميكيًا هنا -->
     </tbody>
   </table>
 
@@ -63,10 +61,11 @@
     const editQuantity = document.getElementById("editQuantity");
     const editPrice = document.getElementById("editPrice");
     const saveEditButton = document.getElementById("saveEdit");
-    let items = JSON.parse(localStorage.getItem("items")) || [];
+
+    // استخدام مستودع 2 في localStorage
+    let items = JSON.parse(localStorage.getItem("itemsWarehouse2")) || [];
     let editIndex = null;
 
-    // تحديث عرض الجدول عند تحميل الصفحة
     renderTable();
     updateTotalPrice();
 
@@ -77,7 +76,6 @@
       const quantity = parseInt(document.getElementById("Quantity").value.trim());
       const price = parseFloat(document.getElementById("Price").value.trim());
 
-      // التحقق من صحة المدخلات
       if (name && quantity > 0 && !isNaN(price) && price > 0) {
         const total = (quantity * price).toFixed(2);
         items.push({ name, quantity, price, total });
@@ -134,7 +132,6 @@
       const quantity = parseInt(editQuantity.value.trim());
       const price = parseFloat(editPrice.value.trim());
 
-      // التحقق من صحة المدخلات
       if (name && quantity > 0 && !isNaN(price) && price > 0) {
         const total = (quantity * price).toFixed(2);
         items[editIndex] = { name, quantity, price, total };
@@ -148,7 +145,7 @@
     });
 
     function saveToLocalStorage() {
-      localStorage.setItem("items", JSON.stringify(items));
+      localStorage.setItem("itemsWarehouse2", JSON.stringify(items));
     }
   </script>
 </body>
